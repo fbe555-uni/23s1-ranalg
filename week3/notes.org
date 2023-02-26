@@ -1,0 +1,66 @@
+#+TITLE: Hashing functions
+
+* Universal hashing
+
+** Application - signature
+The probability of signature collision was bound first using the union bound, then afterwards using markovs inequality. The first method is the better one.
+
+** Example hash function - $h(x) = ((a x + b) mod p) mod m$
+pick any prime 
+
+*** TODO insert blackboard images 
+
+proving the claim that $$ P
+
+*** TODO Work through the collision probability proof
+
+*** Practical issues: numbers are too large
+Mersenne primes need to be used in order to efficiently calculate this hash as well as 'long devision' in order to deal with the large numbers
+
+** Example: $ 
+[2^w] -> [2^l]: only between bitstrings
+pick a random odd number in [ 2^w]
+h(a) = floor((a * x mod 2^w)/2^(w-l))
+This function looks less simple, mathematically, but works well with available operations and datatypes for computers.
+if w = 64 - use uint64_t
+pseudo code:
+    uint64_t * h(uint64_t a, uint64_t x, uint32_t l){
+        return a*x >> (64-l);
+    }
+here, the mod 2^64 is contained in discarding the overflow, and the division is a bit shift
+
+
+The proof ends up showing that the function is a 2-universal hash function, by taking the union bound of two cases, one where the odd bit is in the section that becomes the hash, and one where it is below. Meaning one case.
+
+* Strong universal hashing / pairwise independent hashing
+for all two distinct keys and to not necessarily distinct outputs, the probability that the first pair maps to the second pair is equal to 1/(m^2)
+This implies that it's universal since the probability of
+
+There is a c-approx version of strong universality as well, which has the property of the hashes being independent, but has the probability as c/(m^2) instead.
+
+** example:
+ax + b mod p mod m
+this is also a c-approx strong universal hashing algorithm
+This was not proven, but basically the idea was that the numbers are independent before the modulo operations and these do not remove this property..
+
+The second example can be generalized by adding a second random variable and constraining the size of w 
+
+* Coordinated sampling
+network statistics
+doing randomized sampling in a network guaranteeing that the packages being sampled are coordinated, without any coordination between the nodes.
+This is done by using a global strong universal hash function, and use a global threshold on the hash value to determine whether or not to sample a given package.
+Since the whole point of random sampling is efficiency, and the hash must be computed for all incoming packages, the hashing algorithm must be very efficient.
+
+** proving the bounds of the expected sample size
+note that this example is different from what is done in the notes.
+We want the sample size to be the sampling probability p times the size of the total dataset.
+This is possible by sampling all the data with a probability of p, but this is not the expected bahaviour (large datasets with a small probability and no data the rest of the time)
+Instead it would be useful to show that the dataset is close to p times size of A, with high probability
+markov fails to do this.
+chebychev is used, since it is often good for cases using strong universality (with independent inputs)
+variance is shown to be <= p * size(A)
+
+* K-wise independence
+Like stron universality, but with the addition that the number of inputs produce independent hashes.
+This can be used in order to use chernov without the presumption of true random hash, but using k = O(lgn) fs
+

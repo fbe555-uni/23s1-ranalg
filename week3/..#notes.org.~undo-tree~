@@ -1,0 +1,9 @@
+#+TITLE: Hashing functions
+
+* Universal hashing
+
+** Application - signature
+The probability of signature collision was bound first using the union bound, then afterwards using markovs inequality. The first method is the better one.
+
+** Example hash function - $h(x) = ((a x + b) mod p) mod m$
+pick any prime 

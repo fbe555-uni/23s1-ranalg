@@ -1,0 +1,14 @@
+#+TITLE: Week 5 - Streaming
+
+* Lecture notes                                                      :ATTACH:
+:PROPERTIES:
+:ID:       1c6b91bb-c4ec-4c09-9f8f-c8a23bb36edb
+:END:
+** $$\frac n k$$ ?
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.7110169491525424)
+:END:
+I cannot quite understand why n/k bounds the number of times the counter isn't incremented.
+
+* Equation test
+$$ y = ax + b $$

@@ -1,0 +1,80 @@
+#+TITLE: Random Algorithms - Week 4 - Kargers Min Cut
+
+* Annotated slides:
+:PROPERTIES:
+:NOTER_DOCUMENT: slides.pdf
+:END:
+** Tools
+*** Linearity of expectations
+Usefull when a problem can be broken down into it's constituents - the expectation of a sum is the sum of the individual expectation
+*** Markov's inequality
+Useful when calculating bounds by finding the probability of a certain deviation from the expectation
+*** Chernoff bounds
+Useful to calculate sharp concentration bounds when
+*** Union bound
+Useful for calculating worst case probability when the worst case consists of a discrete number of 'bad events'
+*** Additionally
+Chebychev's inequality calculate looser concentration bounds with fewer assumptions than chernoff.
+:PROPERTIES:
+:NOTER_PAGE: 10
+:END:
+** Repeated executions
+Todays lecture is about calculating the probability of success for repeated executions depending on the probability of success of a single execution.
+since the number of repeats in the equation is $$\frac{\ln{n}}{t}$$ the probability of success t should be no worse than polynomial? 
+:PROPERTIES:
+:NOTER_PAGE: 11
+:END:
+** Flow
+Flow here refers to the maximum number of disjoint or separate paths one could define from s-t
+This allows using the set of max flow algorithms for min s-t cut problems
+:PROPERTIES:
+:NOTER_PAGE: 21
+:END:
+** Probability of correct cut
+This algorithm doesn't necessarily find the right cut, but with 'reasonable probability', it will. Rinse and repeat to get a good probability.
+:PROPERTIES:
+:NOTER_PAGE: 62
+:END:
+** analysis
+*** lemmas
+Sum of degrees - This equation says that the sum of degree of nodes in a graph is twice the number of edges, since each degree counts one end of an edge meaning there will be two per edge.
+inequality - deg(v) >= |C| - by the definition of C
+*** combination
+the number of edges is at least...
+*** 
+:PROPERTIES:
+:NOTER_PAGE: 68
+:END:
+** not great but polynomial
+:PROPERTIES:
+:NOTER_PAGE: 72
+:END:
+** gain:
+:PROPERTIES:
+:NOTER_PAGE: 96
+:END:
+The higher execution time is offset by a better chance of success, as shown in the successive slides.
+** prob of success
+:PROPERTIES:
+:NOTER_PAGE: 97
+:END:
+The probability of success is given here simply as 1- the squared probability that something goes wrong in one of the recursive calls.
+This recursive relation can be rewritten as
+$$ p(n) \gte 1 - {\left( 1- \frac12 P\left(\frac n {\sqrt{2}}\right)\right)}^2  = P \left( \frac{n}{\sqrt{2}} \right) - \frac{{P\left( \frac{n}{\sqrt{2}} \right)}^2}{4} $$
+** guessing the solution
+:PROPERTIES:
+:NOTER_PAGE: 100
+:END:
+Since neither the master theorem or a recursion graph helps solve this, the third method of guessing and verifying is going to be used.
+** Masters theorem
+is whats used to resolve the runtime
+:PROPERTIES:
+:NOTER_PAGE: 95
+:END:
+
+** Probability of failure is dominated by the last few steps.
+As a result, repeating the last steps several times for each start will improve the overall performance significantly
+:PROPERTIES:
+:NOTER_PAGE: 91
+:END:
+* Loose notes
