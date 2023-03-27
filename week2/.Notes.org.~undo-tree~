@@ -1,6 +1,0 @@
-(undo-tree-save-format-version . 1)
-"64c483c4625c42c853c9ae376f14139a1fca7174"
-[nil nil nil nil (25570 23155 131138 658000) 0 nil]
-([nil nil ((nil rear-nonsticky nil 55 . 56) (nil read-only nil 55 . 56) (nil read-only nil 51 . 55) (nil read-only nil 50 . 51) (nil read-only nil 40 . 50) (nil read-only nil 39 . 40) (nil read-only nil 38 . 39) (nil read-only nil 24 . 38) (nil read-only nil 23 . 24) (nil read-only nil 10 . 23) (nil read-only nil 9 . 10) (nil rear-nonsticky nil 2 . 3) (nil read-only nil 2 . 3) (nil org-noter-session-id nil 1 . 2) (nil front-sticky nil 1 . 2) (nil read-only nil 1 . 2) (#(":NOTER_DOCUMENT: slides.pdf" 0 1 (fontified nil) 1 15 (fontified nil) 15 16 (fontified nil) 16 17 (fontified nil) 17 27 (fontified nil)) . -23) (23 . 77) (23 . 24) (1 . 29) (t 25570 23046 604209 942000)) nil (25570 23155 131133 774000) 0 nil])
-([nil current ((#(":NOTER_PAGE: [[pdf:~/uni/23s1-ranalg/week2/slides.pdf::14++0.00]]" 0 1 (fontified nil) 1 11 (fontified nil) 11 12 (fontified nil) 12 13 (fontified nil) 13 65 (fontified nil)) . -83) (83 . 213) (83 . 84) (69 . 88) (60 . 70) (nil fontified nil 59 . 60) (nil fontified nil 58 . 59) (#("* " 0 1 (fontified nil) 1 2 (fontified nil)) . 57) (57 . 62)) nil (25570 23155 131117 33000) 0 nil])
-nil
