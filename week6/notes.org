@@ -1,0 +1,49 @@
+#+TITLE: Lecture 6 - Streaming, Heavy Hitters
+#+DATE: March 7th 2023
+
+* Lecture notes:
+:PROPERTIES:
+:NOTER_DOCUMENT: HeavyHitter.pdf
+:END:
+
+** Problem formulation
+:PROPERTIES:
+:NOTER_PAGE: 1
+:END:
+Basically about detecting common elements in a stream referred to as Heavy Hitters
+Heavy hitters is defined as elements with a frequency larger than some fraction of the stream length
+To allow gain from randomization, some slack is needed. This is done by allowing some elements from the range $$\epsilon n > f_x > \frac \epsilon 2 n$$ to be erroneously added to the list.
+
+** Using an adapted Misra-Gries
+Output only results that have $$c_x \gte \frac\epsilon2 n$$ and set $$k=\frac2\epsilon$$
+This works because the estimates are always under-estimates. Additionally we also know that the mistake is given as $$ f_x - \frac n {k+1} \le  \tilde{f_x} < f_x$$ which means that we cannot miss a heavy hitter with the given choice of $$k$$.
+
+** Count min solution                                                :ATTACH:
+:PROPERTIES:
+:ID:       409a4c2d-730a-4116-9b19-38fada0e6e06
+:END:
+Using count-min with $$\delta = \frac 1 {U^2}$$ and $$ \text{CM}\left(\frac\epsilon2, \frac1{U^2} \right)$$
+Then return only Heavy hitters. This works since estimates are over-estimates
+This can overestimate enough to include a light element, but this happens with only $$\frac 1 U$$ probability (The probability for any given element is $$\frac1{U^2}$$, which can then be used with the union bound)
+
+** Comode, Muthukrishran                                             :ATTACH:
+:PROPERTIES:
+:NOTER_PAGE: 1
+:ID:       569ea1b6-be1a-4b02-923b-7981fa383f7d
+:END:
+Imagine a binary tree, bisecting the universe at every level, and where the leafs represents the individual universe members.
+Each node in the tree represents the frequency of all the nodes below it in the tree.
+The idea is then to utilitze that any parrent of a heavy hitter will itself be heavy. Finding heavy hitters can then be done efficiently by searhing the tree from the root, considering children of heavy nodes.
+To avoid having to store the whole tree, each layer $$l$$ is approximated by a count-min sketch $$\text{CM}_l\left(\frac\epsilon2, \frac1{U^2} \right)$$
+Updating is done easily since one just iterates the layers, updating the count min sketch with index $$ \left\lfloor \frac i l \right\rfloor$$
+The validity is again shown seperately for the two criteria. Using countmin, we again know that the algorithms isn't missing any HH.
+Using the binary tree structure described, leafs are only added by the $$\text{CM}_0\left.estimate(i) > \epsilon n$$. Using the union bound on this event, we end up with an error probability of $$\frac1U$$.
+The final thing to analyse is the querry time. This depends on the number of nodes querried. To determine how many nodes can be expected to be examined, the argument is made that the nodes with freqencies larger than $$\frac \epsilon 2 n $$ will be visited, while smaller nodes will be visited only very rarely, since this requires a large over estimate.
+A possible augmentation to change this from a high probability bound to a worst case bound is to keep a count of the number of nodes visited, and abort if the bound of heavy $$\frac \epsilon 2 n $$ nodes.
+
+** Nelson et al.
+:PROPERTIES:
+:NOTER_PAGE: 2
+:END:
+This solution is the same as the one above, with the difference that the count min sketches for levels above the leaf level in the tree is constructed as $$\text{CM}_l\left(\frac\epsilon2, \frac14 \right)$$ for $$l > 0$$
+This improves both space, update, and querry performance.

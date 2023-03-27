@@ -1,14 +1,91 @@
 #+TITLE: Week 5 - Streaming
 
-* Lecture notes                                                      :ATTACH:
+* Lecture notes
 :PROPERTIES:
-:ID:       1c6b91bb-c4ec-4c09-9f8f-c8a23bb36edb
+:NOTER_DOCUMENT: CountSketch.pdf
 :END:
-** $$\frac n k$$ ?
+**  
+** Streaming algorithms: Frequent items
 :PROPERTIES:
-:NOTER_PAGE: (1 . 0.7110169491525424)
+:NOTER_PAGE: (1 . 0.24491525423728816)
 :END:
-I cannot quite understand why n/k bounds the number of times the counter isn't incremented.
+The problem dealt with in this note is that of keeping an approximate running tally of the frequency
+of objects in a stream. The justification for using an approximation is to conserve memory.
+Specifically the available memory is set to $$O\left( \log^c n \right)$$.
+*** TODO What is the c in $$\log^c$$?? 
+** Deterimnistic algorithm
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.38898305084745766)
+:END:
+The proposed deterministic algorithm estimates frequencies with an additive error of $$n/k$$ using
+$$O\left(k \log n \right)$$ memory. Where $$k$$ is the number of elements tracked. The remaining
+(untracked) items are estimated as having a frequency of 0. The estimated frequency lies in the
+interval $$\left[ f_i - n/k, f_i \right] $$ 
+*** DONE Why does the list of counters use $$ k \log n $$ memory rather than just $$k$$
+CLOSED: [2023-02-28 Tue 09:18]
+Because they count bit's rather than words
+*** DONE Why can the decrement event occur a maximum of $$n/k$$ times?
+CLOSED: [2023-02-28 Tue 09:18]
+The case that leads to the most decrements is adding new items every time, in which case it would
+take k items to fill up the array, and then all elements would be decremented by 1.
+In the case where each element is new, the limit becomes $$\frac n {k+1}$$.
+- The formal proof considers the sum of counters, which can only be increased by 1 n times.
+- Every decrement reduces it by k
+- The sum cannot be negative, and so decrements can only occur every k cycles.
+To formally argue for $$\frac n {k+1}$$, one only needs to add the argument, that the decrement
+itself takes up a cycle, adding one to the denominator.
+** CountMin sketch
+:PROPERTIES:
+:NOTER_PAGE: (1 . 0.7688135593220339)
+:END:
+The CountMin sketch keeps track of elements by using the hash of a function to index into a $$k$$
+long array. This estimates the frequency within the bound $$\left[ f_x, f_x + \epsilon*n \right]$$.
+The lower bound is trivial since any element that doesn't experience a hash collision will be
+tallied exactly. Intuitively, hash collision would occur for a given cell in the array with
+probability n/k since the hash function distributes elements equally (universal hash function).
+
+*** DONE Why sketch rather than algorithm?
+CLOSED: [2023-02-28 Tue 09:20]
+Since it creates an approximation rather than a full count.
+Not a strictly defined term.
+*** TODO Why $${|f|}_1$$ rather than $$n$$?
+** Count Sketch
+:PROPERTIES:
+:NOTER_PAGE: (2 . 0.6650847457627118)
+:END:
+This sketch improves on count min by having an error of $$\epsilon {\left\Vert f \right \Vert}_2 $$
+rather than $$\epsilon {\left\Vert f \right \Vert}_1 $$ Depending on the data, this can be a drastic
+improvement. This sketch uses a similar data structure as above, with an additional strongly
+universal hash function, which maps to {-1, 1}. Each update is then done the same as before, but
+multiplying the random sign provided by the new hash function to the delta. Estimation is then done
+by returning the relevant cell again multiplied by the sign from the second hash function. The
+result of this is to mix the directions of the errors, so that they might (partially) cancel each
+other out.
+The proof of the error bound cannot use the Markov inequality here since the random veriable isn't non-negative.
+Chebychev is used here - needs the expectation and the variance to work.
+
+$$\sum{\Bbb E \left[ g(y) X_y \right] }$$ is decomposed as the product of expectations since
+$$g(y)$$ and $$X_y$$ are independent When calculating the variance, the same can be done for
+expectation of the product of two $$g$$s, so long as they are hashing two different values, but not
+the case when they are hashing the same value (since $$g$$ is strongly universal).
+
+In order to querry the count sketch, one needs to converge each of the different estimates in some
+way. Intuitively one might use the mean - This reduces the variance by the factor of t, resulting in
+a factor of t improvement in performance. If one uses the median instead, this is less sensitive to
+outliers, and improves performance. The probability of error is more difficult to bound. One thing
+that you can argue is that at least half the estimates have to fail for the median to fail, in which
+case the median will fail if all failed cases fall on the same side of the median. This provides a
+bound, albeit not a very tight one. Proving $$Pr\left[\sum_i{Z_i \gte \frac t 2 \right] \lte
+\delta$$ could be proved using Markov, but since the random variables are binary, Chernoff can be
+used, providing a tighter bound. $$Z_i = \begin{cases} 1 &\text{if ith row estimate diff > }\epsilon{\Vert f \Vert}_2 \\ 0 &\text{otherwise} \end{cases}$$ 
+
+** Turnstile vs strict turnstile
+*** Turnstile
+Stream elements are tuples, with an indicator or index, along with an increment or decrement in the form of a signed integer.
+*** Strict turnstile
+As turnstile, but with the guarantee that the count/sum for any one element can never go negative.
+
+
 
 * Equation test
 $$ y = ax + b $$

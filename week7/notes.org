@@ -1,0 +1,87 @@
+#+TITLE: Lecture 7 - Dimensionality Reduction
+#+DATE: March 21st 2023
+
+* Lecture notes:
+:PROPERTIES:
+:NOTER_DOCUMENT: ra-lecture-week12-23.pdf
+:END:
+** Preservation of similarity
+:PROPERTIES:
+:NOTER_PAGE: 3
+:END:
+This property must be the central tennet in any form om dimensionality reduction.
+** $\mathcal N (0,1)$
+:PROPERTIES:
+:NOTER_PAGE: 4
+:END:
+Using this distribution simplifies calculations significantly, and can often be achieved by
+centering and normalizing the data.
+** Johnson-Lindenstrauss
+:PROPERTIES:
+:NOTER_PAGE: 9
+:END:
+For a given accuracy parameter the squared 2-norm of the transformed point will lie in a certain
+range from the square 2-norm of the original point. The dimension of the target space depends on the
+size of the input dataset (not the dimension) and the required precision.
+
+Proof will be by the probabilistic method, where positive probability is taken as proof of existence.
+*** TODO Check if this is the same as 'Random Sampling' or whatever it was, from internet of things technology.
+** Expectation of sum of squared N(0, 1)
+:PROPERTIES:
+:NOTER_PAGE: 14
+:END:
+Nice and easy
+** Sharp concentration                                               :ATTACH:
+:PROPERTIES:
+:NOTER_PAGE: 15
+:ID:       3ff69b18-5852-402e-a51c-2d8b20d33960
+:END:
+Note first that the distribution is no longer symmetric as it goes 0 -> inf rather than -inf -> inf
+as before.
+He used chebychev on the board here.
+Actually he proofs chebychev using Markov...
+** using markov
+:PROPERTIES:
+:NOTER_PAGE: 16
+:END:
+Here the expression is transformed using $\lambda$ because it allows markov to produce much tighter
+bounds for some reason.
+*** TODO What reason?
+** Computing the expectation
+:PROPERTIES:
+:NOTER_PAGE: 19
+:END:
+The final line in the slide just integrates over the $f()$ (the distribution function?) to calculate
+the expectation.
+The final equality sign uses the characteristic of pdfs that their integral is 1 to avoid computing the integral somehow.
+*** TODO How exactly?                                                :ATTACH:
+:PROPERTIES:
+:ID:       1ab091e9-55ba-4bfc-8ab8-17a56944cb3b
+:END:
+** Magic tricks
+:PROPERTIES:
+:NOTER_PAGE: 22
+:END:
+This Section uses 'magic' tricks such as $\lambda$, and the approximation used in the last part of
+this slide.
+** Half way summary
+:PROPERTIES:
+:NOTER_PAGE: 24
+:END:
+Multiplying by the transformation matrix doesn't distort the square of the 2-norm much?
+** Factor out the the unit vector
+:PROPERTIES:
+:NOTER_PAGE: 27
+:END:
+This factors out the unit vector multiplied by L, which shows that $\left\Vert x_i-x_j \right\Vert_2^2$ will be largely undistorted.
+** Toast
+:PROPERTIES:
+:NOTER_PAGE: 33
+:END:
+My brain is toast by now, and I have no idea what he's saying.
+*** TODO Figure this bit out.
+** Something familiar
+:PROPERTIES:
+:NOTER_PAGE: 36
+:END:
+Finally something familiar
