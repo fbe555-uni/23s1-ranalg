@@ -1,0 +1,92 @@
+#+TITLE: Week 8 - Invertible Bloom Lookup Tables
+#+DATE: 28th of March 2023
+
+* Invertible bloom lookup tables
+The reading for this lecture was a paper on a datastructure which is an extension of bloom filters,
+providing a proximate dictionary functionality, with get, insert, delete, and list operations, where
+get and list can occationaly fail, but with low probability.
+** How does it compare to other dict-like data structures - What are the use cases
+The main difference here is that it scales with t, and since it can go over t, but still be valid when elements are removed again, it is usefull for storing large datasets that will shrink again, i.e. active connections in a router, where 
+
+* Notes:
+** General structure                                                 :ATTACH:
+:PROPERTIES:
+:ID:       03166429-2bf3-4331-8a75-710f782e9ec6
+:END:
+** Use cases
+Server keeping track of connections
+database syncronization
+
+** How it works:                                                     :ATTACH:
+:PROPERTIES:
+:ID:       833f89c3-fa69-4d69-9224-be25c6d8bab0
+:END:
+Maintain a k x m matrix with a hash function $h_1 \dotsc h_k$ corresponding hash functions.
+Each node has three fields:
+- count
+- keySum
+- valueSum
+
+Inserting is done to the corresponding cell in each row, by incrementing count and adding key and value to their respective sums
+deletions are simply the inverse
+XOR can be used instead of additions/subtraction to avoid overflow
+Get is done by iterating until a cell with count either 1 or 0. if one, return value if keySum = key otherwise null. if zero, return null. If iteration finishes get fails and return an error.
+
+** Failure probability - Get                                         :ATTACH:
+:PROPERTIES:
+:ID:       c75fe7e7-bcf1-447d-9c27-c15a6ad02b32
+:END:
+if x_i not in X - h_j(x_i) needs to have two other elements mapped to it for each row j
+if x_i in X - each row needs to be in collision - the more likely failure case
+
+The second case has probability 1/2 for each row, resulting in a total probability 2^-k. see attached image. resulting in $k = \log_2(1/\delta)$.
+
+** List entries
+Produce a list of k-v pairs
+strategy:
+- find a cell with count 1
+- output found element and delete it
+- repeat
+- if a full iteration completes without finding a count=! cell -> return partial and fail
+- if table is empties -> return complete list
+
+*** Hyper tables
+graphs where (hyper)edges contain several nodes. (a bit venn-diagram like)
+The two core of a hypergraph - remove elements contained only in one hyperedge. The two core is what remains.
+This is what's used to prove the list entries in the paper.
+
+*** Proof - List entries bound                                       :ATTACH:
+:PROPERTIES:
+:ID:       e8a36d37-c2f5-4e83-8657-33871a81a3c4
+:END:
+trying to prove O(t)
+Alternatively, a min heap (which is ?) could work, but not well enough
+Iterate over the structure adding all cells with count = 1 to a queue, then do deletions on the queued elements in a different loop, adding elements to the queue when count reaches 1 during deletion.
+See attached image for O(t) complexity analysis
+
+*** Failure probability <= (t/e)^-k+2                                :ATTACH:
+:PROPERTIES:
+:ID:       f1ec9e55-ba6e-4dc3-ba7b-c9c5a98d540d
+:END:
+Massive union bound coming up :)
+F: peeling fails
+F_j: peeling fails with j elements left
+$F = \Cup_{j=2}^n F_j$ since j cannot be less than 2 (because that would succeed)
+I cannot keep up. see attached image.
+The key observation is that the number of cells remaining in each row is bounded by j/2 because each remaining cell must have a count of at least 2.
+The j/2 bound is critical for the weird eliminations happening in the top right. This results in the probabilities less than one meaning they shrink as j grows.
+This analysis requires a true random hash function.
+
+** Database syncronization                                           :ATTACH:
+:PROPERTIES:
+:ID:       8bb2f4c8-371c-4a47-9e68-46e076959a3b
+:END:
+For the use case mentioned in the intro, we still need to add robustness to erroneous deletions.
+To do this, there's a keyChecksum field added to each cell, which is the sum of the hashes of the keys using a new hash function g_i.
+This is added to the validity check when a cell with count=1 is found. As g_i(c.keySum) == c.keyChecksum, before checking if the key is the desired one.
+
+*** validity proof                                                   :ATTACH:
+:PROPERTIES:
+:ID:       27488578-4aa1-4ed1-aec4-7e49c8fc76d0
+:END:
+This is done by looking at the two failure cases of either having conflicts in every row, and the probability of a different set of keys resulting in a keyChecksum of zero.
