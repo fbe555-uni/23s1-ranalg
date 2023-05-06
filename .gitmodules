@@ -1,0 +1,8 @@
+[submodule "project2"]
+	path = project2
+	url = git@github.com:fbe555/23s1-ranalg-project2.git
+[submodule "project2/"]
+	url = git@github.com:fbe555-uni/23s1-ranalg-project2.git
+[submodule "project3"]
+	path = project3
+	url = https://github.com/fbe555-uni/23s1ranalg-project3.git
