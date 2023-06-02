@@ -1,0 +1,79 @@
+#+TITLE: MaxSat and more
+#+SUBTITLE: Randomized Algorithms week 11
+#+DATE: 2023-04-25
+
+* Annotated slides
+:PROPERTIES:
+:NOTER_DOCUMENT: ra-lecture-week17-23.pdf
+:END:
+** An integer linear program for MAXSAT
+:PROPERTIES:
+:NOTER_PAGE: 22
+:END:
+Definitions for the linear program solution
+
+Maximize weights times the indicator variables for the clause instatiation
+
+subject to
+
+  z_j is zero iff all literals in the clause are false
+  y_i and z_j \in {0, 1}
+
+This is equal to previous problem formulation
+** Improvement
+:PROPERTIES:
+:NOTER_PAGE: 24
+:END:
+Drop the integrality contraint, which transforms the problem from an Integer Linear Program to a regular linear program.
+
+This is solvable in polynomial time.
+** ILP vs LP
+:PROPERTIES:
+:NOTER_PAGE: 26
+:END:
+The linear programming space is (obviously) a much larger space, so the trick is to extract an ILP
+solution from the space obtained using LP. This can be interpreted as finding some rounding strategy
+to convert back into integer space. Deterministic rounding does not work here, but randomized
+rounding of some sort can work.
+
+Another insight gained from the LP solution is that the optimum of the LP problem bounds the ILP
+optimum, since the latter must lie within the space of the former. This is the main thing that will
+be used.
+** General recipe
+:PROPERTIES:
+:NOTER_PAGE: 28
+:END:
+The above can be summarized as follows.
+** Set Cover - Concrete example
+:PROPERTIES:
+:NOTER_PAGE: 30
+:END:
+The example given is how to set the gains on antennas covering different numbers of villages
+depending on said gain, in such a way that a fixed set of antenna locations can cover all villages.
+Minimizing the Cost.
+** Maximum degree-constrained subgraph
+:PROPERTIES:
+:NOTER_PAGE: 32
+:END:
+This problem creates a subgraph where each node can have a constraint on the number of connecting
+edges, while maximizing the weights of the nodes. This has a deterministic solution that can be
+calculated in polynomial time. There is a version of this in exercise 3.
+Linear programs and randomized rounding are key to project3.
+** Randomized rounding
+:PROPERTIES:
+:NOTER_PAGE: 35
+:END:
+Simply set variables to 0 or 1 with probabilities according to the fractional solution
+** Get rid of the products
+:PROPERTIES:
+:NOTER_PAGE: 39
+:END:
+Since the goal is a linear relation, the products need to be eliminated. This is done by
+transforming the terms to powers of e which can be rewritten as a sum, and is strictly larger than
+the product version.
+** linearizing
+:PROPERTIES:
+:NOTER_PAGE: 48
+:END:
+The exp(-z_j*) is still non-linear, but can be aproximated as a linear relation at the cost of a
+looser bound.

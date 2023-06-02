@@ -1,0 +1,36 @@
+#+TITLE: Fast JL transform
+#+DATE: 2023-04-11
+
+* Recap
+The JL lemma - the squared distance is within a certain bound, determined by the amount of
+dimensionality reduction
+
+* Optimizations
+** Using a random array of {-1, 1} values
+This was proven, skipping the sharp concentration step. See slides.
+
+** Sparse embeddings
+i.e. using matrices of mainly zeroes. This is much more efficient, since the multiplication by a
+matrix is the sum of a number of products determined by the number of non-zero cells.
+
+** Feature hashing
+For each column in the transformation matrix, pick a single cell and let the rest be zero. This is
+not guaranteed to work, in the general case, but it has been shown to work using certain assumptions
+on the input data.
+
+* Fast JL                                                            :ATTACH:
+:PROPERTIES:
+:ID:       e9fa0eb5-e973-481e-87be-01acbe8ac9ec
+:END:
+uses feature hashing and sparse embedding together. The walsch-hadamard matrix forces the use of
+vectors with a length that is a power of two. This is accomodated by padding with zeroes. This is
+combined with a random diagronal matrix, and a transformation matrix P, and embedding is performed
+as $PHDv$.
+
+See attached whiteboard image..
+
+** D doesn't affect the norm
+This is true since D basically just puts random signs on each element, which is removed when
+squared.
+
+** 
