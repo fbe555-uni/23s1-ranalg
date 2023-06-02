@@ -1,0 +1,103 @@
+#+TITLE: Tools for analysis of randomized algorithms
+#+AUTHOR: Felix Blix Everberg
+#+DATE: <2023-06-01 Thu>
+#+OPTIONS: toc:nil
+
+#+begin_export latex
+\newtheorem{global_counter}{}
+#+end_export
+
+* Linearity of expectation
+This theorem states that since the expectation of a random variable is a linear
+function, the expectation of the sum of a set of random variables is equal to
+the sum of their individual expectations. That is:
+
+#+begin_export latex
+\newtheorem{lin_exp}[global_counter]{Theorem}
+\begin{lin_exp}
+\label{th:lin_exp}
+(Linearity of Expectation): Let $X_1, \dots, X_n$ be random variables, then
+\[ \mathbb E \left[ \sum_i X_i \right] = \sum_i \mathbb E \left[ X_i \right] \]
+\end{lin_exp}
+#+end_export
+
+- Crucial for working with sums.
+- Does NOT require independence.
+
+* Markov's Inequality
+Markov's inequality bounds the probability that a non-negative random variable
+exceeds it's expectation by a certain amount.
+
+#+begin_export latex
+\newtheorem{markov}[global_counter]{Theorem}
+\begin{markov}
+\label{th:markov}
+(Markov's Inequality): Let $X$ be a non-negative random variable, then for any $t > 0$
+\[ \DeclareMathOperator{\pr}{\mathrm{Pr}}
+\pr[X \ge t] \le \frac{\mathbb E [X]}{t} \]
+#+end_export
+
+- The most basic inequality for bounding variables.
+- Can also be used to bound the probability of $X$ being smaller than a value,
+  by phrasing it in terms of the negated event, i.e. $1-\text{Pr}[x>t]$.
+- Used to prove Chebyshev's inequality.
+- Can also be written with $>$ and $<$ rather than $\ge$ and $\le$.
+
+* Chebyshev's Inequalityh
+This inequality bounds the probability that the realization a random variable
+$X$ diverges from it's mean by more than a threshold $k$.
+
+#+begin_export latex
+\newtheorem{chebyshev}[global_counter]{Theorem}
+\begin{chebyshev}
+\label{th:chebyshev}
+(Chebyshev's Inequality): Let $X$ be a random variable with finite mean $\mu$ and finite
+variance $\sigma^2$. let $k \in \mathbb R_{++}$ then
+\[ \DeclareMathOperator{\pr}{\mathrm{Pr}}
+\pr\left[\left\vert X - \mu \right\vert \ge k \right] \le \frac{\sigma^2}{k^2} \]
+\end{chebyshev}
+#+end_export
+
+- Easy way to bound divergence from expectation if variance is known.
+- Directly derived from Markov's Inequality.
+
+* Chernoff Bound (Hoeffding's Inequality)
+The Chernoff inequalities provide tighter bounds than Markov's Inequality for a
+variable constituting the sum of a set of bounded, independent random variables,
+but also imposes a larger constraint on the treated variable.
+
+#+begin_export latex
+\newtheorem{chernoff}[global_counter]{Theorem}
+\begin{chernoff}
+\label{th:chernoff}
+(Chernoff Bound/Hoeffding's Inequality): Let $X_1, \dots, X_n$ be independent random variables in
+$\left[0, 1\right]$ and let $X = \sum_{i=1}^n X_i$, then for any $0 < \delta < 1$ and any
+$\mu \le \mathbb E [X]$:
+\[ \mathrm{Pr}\left[X<\left(1-\delta\right)\mu\right] < e^{-\delta^2 \mu / 2} \]
+and for any $0 < \delta < 1$ and any $\mu \ge \mathbb E [X]$:
+\[ \mathrm{Pr}\left[X > \left(1+\delta\right)\mu\right] < e^{-\delta^2 \mu / 3} \]
+and finally for any $\delta \ge 1$ and any $\mu \ge \mathbb E [X]$:
+\[ \mathrm{Pr}\left[X > \left(1+\delta\right)\mu\right]
+  < \left( \frac {e^{\delta}} {(1+\delta)^{1+\delta}} \right)^\mu\]
+\end{chernoff}
+#+end_export
+
+- Tighter bounds but requires variables to be bounded and independent.
+- The bounding can often be coerced by normalization or similar.
+- The above can be written with $\le$ and $\ge$ rather than < and >
+
+* Union Bound
+The union bound simply states that the probability that any one of a set of events occur is bounded
+by the sum of probabilities of the individual events. This is intuitive in that it is simply
+assuming that none of the events overlap, which is an obvious worst case.
+#+begin_export latex
+\newtheorem{union}[global_counter]{Theorem}
+\begin{union}
+\label{th:union}
+(Union Bound): Let $E_1, \dots, E_n$ be events, then
+\[ \mathrm{Pr}\left[\bigcup_i E_i \right] \le \sum_i \mathrm{Pr}[E_i] \]
+\end{union}
+#+end_export
+
+- Usefull for easily bounding the probability of a set of possible bad outcomes
+- Does NOT require independence
